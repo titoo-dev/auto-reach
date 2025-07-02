@@ -1,17 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useState, type JSX } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Edit, Facebook, Instagram, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Facebook, Instagram } from 'lucide-react';
+import { ControlButtons } from '@/components/dashboard/control-buttons';
+import { SendObjectsTable } from '@/components/dashboard/send-objects-table';
 
 export const Route = createFileRoute('/')({
 	component: App,
@@ -129,7 +121,6 @@ function App() {
   };
 
   const selectedCount: number = selectedItems.size;
-  const allSelected: boolean = selectedCount === sendObjects.length;
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -144,8 +135,6 @@ function App() {
             </div>
             <ControlButtons
               selectedCount={selectedCount}
-              allSelected={allSelected}
-              onSelectAll={handleSelectAll}
               onAdd={() => console.log('Creating new send object')}
               onSend={handleSendSelected}
               onDeleteSelected={handleDeleteSelected}
@@ -181,219 +170,6 @@ function App() {
   );
 }
 
-type ControlButtonsProps = {
-  selectedCount: number;
-  allSelected: boolean;
-  onSelectAll: (checked: boolean) => void;
-  onAdd: () => void;
-  onSend: () => void;
-  onDeleteSelected: () => void;
-};
 
-const ControlButtons: React.FC<ControlButtonsProps> = ({
-  selectedCount,
-  allSelected,
-  onSelectAll,
-  onAdd,
-  onSend,
-  onDeleteSelected,
-}) => {
-  return (
-    <div className="flex items-center gap-2">
-      <Button variant="outline" onClick={onAdd}>
-        Add Send Object
-      </Button>
-      {selectedCount > 0 && (
-        <>
-          <Button
-            onClick={onSend}
-            className="bg-primary hover:bg-primary/90"
-          >
-            Send ({selectedCount})
-          </Button>
-          <Button variant="destructive" onClick={onDeleteSelected}>
-            Delete ({selectedCount})
-          </Button>
-        </>
-      )}
-    </div>
-  );
-};
 
-type SendObjectsTableProps = {
-  sendObjects: SendObject[];
-  selectedItems: Set<number>;
-  onSelectAll: (checked: boolean) => void;
-  onSelectItem: (index: number, checked: boolean) => void;
-  onEdit: (index: number) => void;
-  onDelete: (index: number) => void;
-  getSocialIcon: (socialtype: 'facebook' | 'instagram') => JSX.Element;
-  getSocialColor: (socialtype: 'facebook' | 'instagram') => string;
-};
 
-const SendObjectsTable: React.FC<SendObjectsTableProps> = ({
-  sendObjects,
-  selectedItems,
-  onSelectAll,
-  onSelectItem,
-  onEdit,
-  onDelete,
-  getSocialIcon,
-  getSocialColor,
-}) => {
-  const allSelected: boolean = selectedItems.size === sendObjects.length;
-
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[50px]">
-            <input
-              type="checkbox"
-              checked={allSelected}
-              onChange={(e) => onSelectAll(e.target.checked)}
-              className="w-4 h-4 rounded border-input accent-primary"
-            />
-          </TableHead>
-          <TableHead className="w-[120px]">Platform</TableHead>
-          <TableHead className="w-[300px]">User Profile</TableHead>
-          <TableHead>Message Template</TableHead>
-          <TableHead className="w-[100px]">Status</TableHead>
-          <TableHead className="w-[120px]">Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {sendObjects.map((sendObj, index) => (
-          <SendObjectRow
-            key={index}
-            index={index}
-            sendObj={sendObj}
-            isSelected={selectedItems.has(index)}
-            onSelect={onSelectItem}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            getSocialIcon={getSocialIcon}
-            getSocialColor={getSocialColor}
-          />
-        ))}
-      </TableBody>
-    </Table>
-  );
-};
-
-type SendObjectRowProps = {
-  sendObj: SendObject;
-  index: number;
-  isSelected: boolean;
-  onSelect: (index: number, checked: boolean) => void;
-  onEdit: (index: number) => void;
-  onDelete: (index: number) => void;
-  getSocialIcon: (socialtype: 'facebook' | 'instagram') => JSX.Element;
-  getSocialColor: (socialtype: 'facebook' | 'instagram') => string;
-};
-
-const SendObjectRow: React.FC<SendObjectRowProps> = ({
-  sendObj,
-  index,
-  isSelected,
-  onSelect,
-  onEdit,
-  onDelete,
-  getSocialIcon,
-  getSocialColor,
-}) => {
-  return (
-    <TableRow
-      className={`group hover:bg-muted/30 ${
-        isSelected ? 'bg-muted/50' : ''
-      }`}
-    >
-      <TableCell>
-        <input
-          type="checkbox"
-          checked={isSelected}
-          onChange={(e) => onSelect(index, e.target.checked)}
-          className="w-4 h-4 rounded border-input accent-primary"
-        />
-      </TableCell>
-      <TableCell>
-        <Badge
-          variant="secondary"
-          className={`${getSocialColor(sendObj.socialtype)} font-medium`}
-        >
-          <span className="mr-1">{getSocialIcon(sendObj.socialtype)}</span>
-          {sendObj.socialtype.charAt(0).toUpperCase() + sendObj.socialtype.slice(1)}
-        </Badge>
-      </TableCell>
-      <TableCell>
-        <div className="flex flex-col">
-          <a
-            href={sendObj.userUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary hover:underline font-medium truncate max-w-[250px]"
-          >
-            {sendObj.userUrl}
-          </a>
-          <span className="text-xs text-muted-foreground">Profile URL</span>
-        </div>
-      </TableCell>
-      <TableCell>
-        <MessageTemplate message={sendObj.message} />
-      </TableCell>
-      <TableCell>
-        <Badge
-          variant="default"
-          className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300"
-        >
-          Ready
-        </Badge>
-      </TableCell>
-      <TableCell>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onEdit(index)}
-            className="h-8 px-2 hover:bg-muted"
-          >
-            <Edit className="w-4 h-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onDelete(index)}
-            className="h-8 px-2 hover:bg-destructive/10 hover:text-destructive"
-          >
-            <Trash2 className="w-4 h-4" />
-          </Button>
-        </div>
-      </TableCell>
-    </TableRow>
-  );
-};
-
-type MessageTemplateProps = {
-  message: string;
-};
-
-const MessageTemplate: React.FC<MessageTemplateProps> = ({ message }) => {
-  const variables: RegExpMatchArray | null = message.match(/\{\{[\w\s]+\}\}/g);
-
-  return (
-    <div className="max-w-md">
-      <p className="text-sm leading-relaxed text-foreground/90 line-clamp-2">
-        {message}
-      </p>
-      {variables && (
-        <div className="flex flex-wrap gap-1 mt-2">
-          {variables.map((variable, idx) => (
-            <Badge key={idx} variant="outline" className="text-xs">
-              {variable}
-            </Badge>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
