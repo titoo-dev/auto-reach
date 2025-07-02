@@ -1,6 +1,6 @@
-import { AddSendObjectDialog } from "../dialogs/add-send-object-dialog";
-import { Button } from "../ui/button";
-import React, { useState } from "react";
+import { AddSendObjectDialog, createStandardAddDialog } from '../dialogs/add-send-object-dialog';
+import { Button } from '../ui/button';
+import React, { useState } from 'react';
 
 type ControlButtonsProps = {
 	selectedCount: number;
@@ -10,33 +10,34 @@ type ControlButtonsProps = {
 };
 
 export const ControlButtons: React.FC<ControlButtonsProps> = ({
-    selectedCount,
-    onAdd,
-    onSend,
-    onDeleteSelected,
+	selectedCount,
+	onAdd,
+	onSend,
+	onDeleteSelected,
 }) => {
-    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+	const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
-    return (
-        <div className="flex items-center gap-2">
-            <AddSendObjectDialog
-                isOpen={isDialogOpen}
-                onOpenChange={setIsDialogOpen}
-                onAdd={onAdd}
-            />
-            {selectedCount > 0 && (
-                <>
-                    <Button
-                        onClick={onSend}
-                        className="bg-primary hover:bg-primary/90"
-                    >
-                        Send ({selectedCount})
-                    </Button>
-                    <Button variant="destructive" onClick={onDeleteSelected}>
-                        Delete ({selectedCount})
-                    </Button>
-                </>
-            )}
-        </div>
-    );
+	return (
+		<div className="flex items-center gap-2">
+			<AddSendObjectDialog
+				isOpen={isDialogOpen}
+				onOpenChange={setIsDialogOpen}
+				onAdd={onAdd}
+				config={createStandardAddDialog()}
+			/>
+			{selectedCount > 0 && (
+				<>
+					<Button
+						onClick={onSend}
+						className="bg-primary hover:bg-primary/90"
+					>
+						Send ({selectedCount})
+					</Button>
+					<Button variant="destructive" onClick={onDeleteSelected}>
+						Delete ({selectedCount})
+					</Button>
+				</>
+			)}
+		</div>
+	);
 };
