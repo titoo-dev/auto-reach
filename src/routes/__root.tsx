@@ -11,6 +11,7 @@ import type { QueryClient } from '@tanstack/react-query'
 
 import type { TRPCRouter } from '@/integrations/trpc/router'
 import type { TRPCOptionsProxy } from '@trpc/tanstack-react-query'
+import Header from '@/components/Header'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -42,6 +43,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
   component: () => (
     <RootDocument>
+      <Header />
       <Outlet />
     </RootDocument>
   ),
