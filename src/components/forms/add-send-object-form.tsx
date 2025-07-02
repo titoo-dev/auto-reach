@@ -7,12 +7,10 @@ import { MessageTemplateField } from "./fields/message-template-field";
 import { Button } from "../ui/button";
 
 type AddSendObjectFormProps = {
-	onAdd: () => void;
 	onCancel: () => void;
 };
 
 export const AddSendObjectForm: React.FC<AddSendObjectFormProps> = ({
-	onAdd,
 	onCancel,
 }) => {
 	const [isPending, startTransition] = useTransition();
@@ -63,18 +61,23 @@ export const AddSendObjectForm: React.FC<AddSendObjectFormProps> = ({
 		}
 
 		startTransition(() => {
-			// Console log submitted information
-			console.log('Submitted Send Object:', {
+			// Create new send object from form data
+			const newSendObject: SendObject = {
 				socialtype: formData.socialtype,
 				userUrl: formData.userUrl.trim(),
 				message: formData.message.trim(),
-			});
+			};
 
-			// Call parent add function
-			onAdd();
+			// Add to store using addSendObject action
+			const { addSendObject } = useAppStore.getState();
+			addSendObject(newSendObject);
 
-			// Reset form using store action
+			// Console log submitted information
+			console.log('Added Send Object:', newSendObject);
+
+			// Reset form and close
 			resetForm();
+			onCancel();
 		});
 	};
 

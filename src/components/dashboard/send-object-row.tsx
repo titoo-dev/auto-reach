@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { TableCell, TableRow } from "../ui/table";
 import type { JSX } from "react";
 import { MessageTemplate } from "./message-template";
+import type { SendObject } from "@/lib/types";
 
 type SendObjectRowProps = {
 	sendObj: SendObject;

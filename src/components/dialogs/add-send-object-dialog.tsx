@@ -19,7 +19,6 @@ type DialogConfig = {
 type AddSendObjectDialogProps = {
 	isOpen: boolean;
 	onOpenChange: (open: boolean) => void;
-	onAdd: () => void;
 	config?: Partial<DialogConfig>;
 };
 
@@ -61,7 +60,6 @@ export const createModalOnlyDialog = (): Partial<DialogConfig> =>
 export const AddSendObjectDialog: React.FC<AddSendObjectDialogProps> = ({
     isOpen,
     onOpenChange,
-    onAdd,
     config: configOverrides,
 }) => {
     const config: DialogConfig = createDialogConfig(configOverrides);
@@ -77,7 +75,7 @@ export const AddSendObjectDialog: React.FC<AddSendObjectDialogProps> = ({
                 <DialogHeader>
                     <DialogTitle>{config.title}</DialogTitle>
                 </DialogHeader>
-                <AddSendObjectForm onAdd={onAdd} onCancel={() => onOpenChange(false)} />
+                <AddSendObjectForm onCancel={() => onOpenChange(false)} />
             </DialogContent>
         </Dialog>
     );

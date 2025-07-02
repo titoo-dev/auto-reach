@@ -4,14 +4,12 @@ import React, { useState } from 'react';
 
 type ControlButtonsProps = {
 	selectedCount: number;
-	onAdd: () => void;
 	onSend: () => void;
 	onDeleteSelected: () => void;
 };
 
 export const ControlButtons: React.FC<ControlButtonsProps> = ({
 	selectedCount,
-	onAdd,
 	onSend,
 	onDeleteSelected,
 }) => {
@@ -22,7 +20,6 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
 			<AddSendObjectDialog
 				isOpen={isDialogOpen}
 				onOpenChange={setIsDialogOpen}
-				onAdd={onAdd}
 				config={createStandardAddDialog()}
 			/>
 			{selectedCount > 0 && (

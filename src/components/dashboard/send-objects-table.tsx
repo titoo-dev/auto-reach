@@ -1,6 +1,7 @@
 import type { JSX } from "react";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "../ui/table";
 import { SendObjectRow } from "./send-object-row";
+import type { SendObject } from "@/lib/types";
 
 type SendObjectsTableProps = {
 	sendObjects: SendObject[];
