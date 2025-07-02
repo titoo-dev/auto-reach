@@ -1,82 +1,129 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
-import { Facebook, Instagram } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { createFileRoute } from '@tanstack/react-router';
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { Edit, Facebook, Instagram, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute('/')({
-  component: App,
-})
+	component: App,
+});
+
+type SendObject = {
+	socialtype: 'facebook' | 'instagram';
+	userUrl: string;
+	message: string;
+};
 
 function App() {
-  const [sendObjects] = useState<SendObject[]>([
-    {
-      socialtype: 'facebook',
-      userUrl: 'https://facebook.com/john.doe',
-      message: 'Hey {{firstName}}, I saw your post about {{company}} and would love to connect!'
-    },
-    {
-      socialtype: 'instagram',
-      userUrl: 'https://instagram.com/jane_smith',
-      message: 'Hi {{firstName}}, your content on {{company}} is amazing. Let\'s collaborate!'
-    },
-    {
-      socialtype: 'facebook',
-      userUrl: 'https://facebook.com/mike.johnson',
-      message: 'Hello {{firstName}}, interested in discussing opportunities at {{company}}.'
-    },
-    {
-      socialtype: 'instagram',
-      userUrl: 'https://instagram.com/sarah_wilson',
-      message: 'Hi there! Love your work at {{company}}. Would you be open to a quick chat?'
-    },
-    {
-      socialtype: 'facebook',
-      userUrl: 'https://facebook.com/alex.brown',
-      message: 'Hey {{firstName}}, your expertise in {{company}} caught my attention!'
-    }
-  ])
+	const [sendObjects, setSendObjects] = useState<SendObject[]>([
+		{
+			socialtype: 'facebook',
+			userUrl: 'https://facebook.com/john.doe',
+			message:
+				'Hey {{firstName}}, I saw your post about {{company}} and would love to connect!',
+		},
+		{
+			socialtype: 'instagram',
+			userUrl: 'https://instagram.com/jane_smith',
+			message:
+				"Hi {{firstName}}, your content on {{company}} is amazing. Let's collaborate!",
+		},
+		{
+			socialtype: 'facebook',
+			userUrl: 'https://facebook.com/mike.johnson',
+			message:
+				'Hello {{firstName}}, interested in discussing opportunities at {{company}}.',
+		},
+		{
+			socialtype: 'instagram',
+			userUrl: 'https://instagram.com/sarah_wilson',
+			message:
+				'Hi there! Love your work at {{company}}. Would you be open to a quick chat?',
+		},
+		{
+			socialtype: 'facebook',
+			userUrl: 'https://facebook.com/alex.brown',
+			message:
+				'Hey {{firstName}}, your expertise in {{company}} caught my attention!',
+		},
+	]);
 
-  const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set())
+	const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
 
-  const getSocialIcon = (socialtype: 'facebook' | 'instagram') => {
-    return socialtype === 'facebook' ? <Facebook className="w-3 h-3" /> : <Instagram className="w-3 h-3" />
-  }
+	const getSocialIcon = (socialtype: 'facebook' | 'instagram') => {
+		return socialtype === 'facebook' ? (
+			<Facebook className="w-3 h-3" />
+		) : (
+			<Instagram className="w-3 h-3" />
+		);
+	};
 
-  const getSocialColor = (socialtype: 'facebook' | 'instagram') => {
-    return socialtype === 'facebook' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' : 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300'
-  }
+	const getSocialColor = (socialtype: 'facebook' | 'instagram') => {
+		return socialtype === 'facebook'
+			? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
+			: 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300';
+	};
 
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      setSelectedItems(new Set(sendObjects.map((_, index) => index)))
-    } else {
-      setSelectedItems(new Set())
-    }
-  }
+	const handleSelectAll = (checked: boolean) => {
+		if (checked) {
+			setSelectedItems(new Set(sendObjects.map((_, index) => index)));
+		} else {
+			setSelectedItems(new Set());
+		}
+	};
 
-  const handleSelectItem = (index: number, checked: boolean) => {
-    const newSelected = new Set(selectedItems)
-    if (checked) {
-      newSelected.add(index)
-    } else {
-      newSelected.delete(index)
-    }
-    setSelectedItems(newSelected)
-  }
+	const handleSelectItem = (index: number, checked: boolean) => {
+		const newSelected = new Set(selectedItems);
+		if (checked) {
+			newSelected.add(index);
+		} else {
+			newSelected.delete(index);
+		}
+		setSelectedItems(newSelected);
+	};
 
-  const handleSendSelected = () => {
-    const selectedMessages = Array.from(selectedItems).map(index => sendObjects[index])
-    console.log('Sending messages:', selectedMessages)
-    // Add your send logic here
-  }
+	const handleSendSelected = () => {
+		const selectedMessages = Array.from(selectedItems).map(
+			(index) => sendObjects[index]
+		);
+		console.log('Sending messages:', selectedMessages);
+		// Add your send logic here
+	};
 
-  const selectedCount = selectedItems.size
-  const allSelected = selectedCount === sendObjects.length
+	const handleEdit = (index: number) => {
+		console.log('Editing message at index:', index);
+		// Add your edit logic here
+	};
 
-  return (
+	const handleDelete = (index: number) => {
+		const newSendObjects = sendObjects.filter((_, i) => i !== index);
+		setSendObjects(newSendObjects);
+
+		// Update selected items to maintain correct indices
+		const newSelected = new Set<number>();
+		selectedItems.forEach((selectedIndex) => {
+			if (selectedIndex < index) {
+				newSelected.add(selectedIndex);
+			} else if (selectedIndex > index) {
+				newSelected.add(selectedIndex - 1);
+			}
+		});
+		setSelectedItems(newSelected);
+	};
+
+	const selectedCount = selectedItems.size;
+	const allSelected = selectedCount === sendObjects.length;
+
+	return (
 		<div className="min-h-screen bg-background p-6">
 			<div className="max-w-7xl mx-auto">
 				<Card>
@@ -92,12 +139,30 @@ function App() {
 						</div>
 						<div className="flex items-center gap-2">
 							{selectedCount > 0 && (
-								<Button
-									onClick={handleSendSelected}
-									className="bg-primary hover:bg-primary/90"
-								>
-									Send {selectedCount}
-								</Button>
+								<>
+									<Button
+										onClick={handleSendSelected}
+										className="bg-primary hover:bg-primary/90"
+									>
+										Send ({selectedCount})
+									</Button>
+									<Button
+										variant="destructive"
+										onClick={() => {
+											const newSendObjects =
+												sendObjects.filter(
+													(_, index) =>
+														!selectedItems.has(
+															index
+														)
+												);
+											setSendObjects(newSendObjects);
+											setSelectedItems(new Set());
+										}}
+									>
+										Delete ({selectedCount})
+									</Button>
+								</>
 							)}
 						</div>
 					</CardHeader>
@@ -126,6 +191,9 @@ function App() {
 									<TableHead>Message Template</TableHead>
 									<TableHead className="w-[100px]">
 										Status
+									</TableHead>
+									<TableHead className="w-[120px]">
+										Actions
 									</TableHead>
 								</TableRow>
 							</TableHeader>
@@ -230,6 +298,30 @@ function App() {
 												Ready
 											</Badge>
 										</TableCell>
+										<TableCell>
+											<div className="flex items-center gap-2">
+												<Button
+													variant="ghost"
+													size="sm"
+													onClick={() =>
+														handleEdit(index)
+													}
+													className="h-8 px-2 hover:bg-muted"
+												>
+													<Edit className="w-4 h-4" />
+												</Button>
+												<Button
+													variant="ghost"
+													size="sm"
+													onClick={() =>
+														handleDelete(index)
+													}
+													className="h-8 px-2 hover:bg-destructive/10 hover:text-destructive"
+												>
+													<Trash2 className="w-4 h-4" />
+												</Button>
+											</div>
+										</TableCell>
 									</TableRow>
 								))}
 							</TableBody>
@@ -253,5 +345,5 @@ function App() {
 				</Card>
 			</div>
 		</div>
-  );
+	);
 }
