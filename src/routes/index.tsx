@@ -137,34 +137,43 @@ function App() {
 								messages
 							</p>
 						</div>
-						<div className="flex items-center gap-2">
-							{selectedCount > 0 && (
-								<>
-									<Button
-										onClick={handleSendSelected}
-										className="bg-primary hover:bg-primary/90"
-									>
-										Send ({selectedCount})
-									</Button>
-									<Button
-										variant="destructive"
-										onClick={() => {
-											const newSendObjects =
-												sendObjects.filter(
-													(_, index) =>
-														!selectedItems.has(
-															index
-														)
-												);
-											setSendObjects(newSendObjects);
-											setSelectedItems(new Set());
-										}}
-									>
-										Delete ({selectedCount})
-									</Button>
-								</>
-							)}
-						</div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  // Add your create new message logic here
+                  console.log('Creating new send object');
+                }}
+              >
+                Add Send Object
+              </Button>
+              {selectedCount > 0 && (
+                <>
+                  <Button
+                    onClick={handleSendSelected}
+                    className="bg-primary hover:bg-primary/90"
+                  >
+                    Send ({selectedCount})
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={() => {
+                      const newSendObjects =
+                        sendObjects.filter(
+                          (_, index) =>
+                            !selectedItems.has(
+                              index
+                            )
+                        );
+                      setSendObjects(newSendObjects);
+                      setSelectedItems(new Set());
+                    }}
+                  >
+                    Delete ({selectedCount})
+                  </Button>
+                </>
+              )}
+            </div>
 					</CardHeader>
 					<CardContent>
 						<Table>
