@@ -38,3 +38,11 @@ The goal is to help freelancers and sales professionals automate and centralize 
 - **Test against existing data** to ensure no data corruption
 
 Always make generated components beautiful following shadcn ui UI Kit.
+
+### TypeScript & Explicit Type Guidelines
+
+- Write all code in TypeScript.
+- Always add explicit type annotations for variables, function parameters, and return values.
+- Avoid using implicit any or relying solely on type inference in public APIs.
+- Ensure that all new components and functions declare their types clearly.
+<!-- Reference: #context7 -->
