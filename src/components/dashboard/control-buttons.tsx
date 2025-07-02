@@ -9,7 +9,6 @@ type ControlButtonsProps = {
 	onDeleteSelected: () => void;
 };
 
-
 export const ControlButtons: React.FC<ControlButtonsProps> = ({
     selectedCount,
     onAdd,
