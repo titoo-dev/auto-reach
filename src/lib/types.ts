@@ -1,5 +1,7 @@
-type SendObject = {
-    socialtype: 'facebook' | 'instagram';
-    userUrl: string;
-    message: string;
-}
+export type SocialPlatform = 'facebook' | 'instagram';
+
+export type SendObject = {
+	socialtype: SocialPlatform;
+	userUrl: string;
+	message: string;
+};
